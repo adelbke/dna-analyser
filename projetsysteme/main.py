@@ -9,6 +9,11 @@ from PyQt5.QtWidgets import QApplication
 
 from .views import Window
 
+# féquence codons AND
+# Mutation
+# ADN Consensus + profil
+# Epissage ARN
+
 def main():
     """RP Contacts main function."""
     # Create the application

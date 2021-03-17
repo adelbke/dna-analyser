@@ -15,7 +15,8 @@ class AbstractWindow(QMainWindow):
         
         layout.addWidget(left)
         layout.addWidget(right)
-        layout.setStretch(0, 3)
+
+        layout.setStretch(0, 0)
         layout.setStretch(1, 7)
 
         self.centralwidget = QWidget()
