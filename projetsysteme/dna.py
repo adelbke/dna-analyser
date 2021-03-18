@@ -1,4 +1,3 @@
-
 from random import randint
 class DNA():
 
@@ -6,11 +5,12 @@ class DNA():
     #  and setters for these static variables
 
     
-    _dna_chain= ""
-    _rna_chain = ""
-    _protein_chain = ""
-    _dna_complement = ""
-    _gc_rate = 0
+    dna_chain= ""
+    rna_chain = ""
+    protein_chain = ""
+    dna_complement = ""
+    gc_rate = 0
+    codon_frequency=0
 
 
     
@@ -65,10 +65,22 @@ class DNA():
         gc= int((adn.count("C")+adn.count("G")) / len(adn) * 100)
         cls.gc_rate=gc
     
-    # @classmethod
-    # def taux_codons()
+    @classmethod
+    def taux_codons(cls):
+        if cls.rna_chain == "":
+            cls.translate_to_rna()
+        from .rna_to_acid import RNA_to_acido_dic
+        rna = cls.rna_chain
+        freq = 0
+        for index in range(0,len(rna),3):
+            if index+3 < len(rna) and RNA_to_acido_dic[rna[index:index+3]] != "---":
+                freq= freq+1
+        cls.codon_frequency = freq
+
     
         
-# DNA.generate_dna(15)
-# DNA.translate_to_rna()
-# print(DNA.rna_chain)
+# DNA.generate_dna(31)
+# DNA.taux_codons()
+# DNA.rna_to_prot()
+# print(DNA.protein_chain)
+# print(DNA.codon_frequency)

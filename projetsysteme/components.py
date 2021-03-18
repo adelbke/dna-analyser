@@ -54,6 +54,7 @@ class SidebarLayout(QVBoxLayout):
         self.btn_arn_vers_proteine.clicked.connect(self.action_arn_vers_proteine)
         self.btn_comp_inv_adn.clicked.connect(self.action_comp_inv_adn)
         self.btn_taux_gc_adn.clicked.connect(self.action_taux_gc_adn)
+        self.btn_freq_codons_adn.clicked.connect(self.action_freq_codons_adn)
 
     
     def action_creer_adn(self):
@@ -71,22 +72,36 @@ class SidebarLayout(QVBoxLayout):
                 x=msg.exec_()
     
     def action_adn_vers_arn(self):
+        if DNA.dna_chain == "":
+            return
         DNA.translate_to_rna()
         MainLayout._instance.output_rna_chain.setText(DNA.rna_chain)
+        
 
     def action_arn_vers_proteine(self):
+        if DNA.rna_chain == "":
+            return
         DNA.rna_to_prot()
         MainLayout._instance.output_protein_chain.setText(DNA.protein_chain)
     
     def action_comp_inv_adn(self):
+        if DNA.dna_chain == "":
+            return
         DNA.get_dna_complement()
         MainLayout._instance.output_dna_complement.setText(DNA.dna_complement)
     
     def action_taux_gc_adn(self):
+        if DNA.dna_chain == "":
+            return
         DNA.taux_gc()
-        MainLayout._instance.output_taux_gc.setText(DNA.gc_rate)
+        MainLayout._instance.output_taux_gc.setText(str(DNA.gc_rate)+'%')
+    
 
-
+    def action_freq_codons_adn(self):
+        if DNA.dna_chain == "":
+            return
+        DNA.taux_codons()
+        MainLayout._instance.output_codon_frequency.setText(str(DNA.codon_frequency))
     
     def setupButtons(self):
         # setup buttons list
@@ -118,13 +133,14 @@ class MainLayout(QFormLayout):
             return None
         super().__init__(*args,**kwargs)
         MainLayout._instance = self
-        
+        chain_width = 50
         elements = [
-            ('ADN','dna_chain'),
-            ('ARN','rna_chain'),
-            ('Proteine','protein_chain'),
-            ('Comp Inv','dna_complement'),
-            ('Taux GC','taux_gc')
+            ('ADN','dna_chain',chain_width),
+            ('ARN','rna_chain',chain_width),
+            ('Proteine','protein_chain',chain_width),
+            ('Comp Inv','dna_complement',chain_width),
+            ('Taux GC','taux_gc',4),
+            ('Fréquence Codons','codon_frequency',4)
         ]
         for element in elements:
             label = QLabel(element[0])
@@ -134,7 +150,7 @@ class MainLayout(QFormLayout):
             textEdit.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
             textEdit.setLineWrapMode(QTextEdit.NoWrap)
             singleWidth = textEdit.fontMetrics().boundingRect('A').width()
-            textEdit.setFixedWidth(singleWidth*50)
+            textEdit.setFixedWidth(singleWidth*element[2])
 
 
             setattr(self,'label_'+element[1], label)
