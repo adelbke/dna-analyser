@@ -2,12 +2,14 @@
 
 """This module provides views to manage the contacts table."""
 
+import PyQt5
+from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import (
-    QLabel, QPushButton, QVBoxLayout
+    QLabel, QLayout, QPushButton, QVBoxLayout
 )
 
 from .settings import window_title
-from .components import AbstractWindow, QPrimaryButton
+from .components import AbstractWindow, SidebarLayout, MainLayout
 
 
 
@@ -17,33 +19,16 @@ class Window(AbstractWindow):
         """Initializer."""
         super().__init__()
         self.setWindowTitle(window_title)
-
+        self.setMenuItems()
         self.setupUI()
+
 
     def setupUI(self):
         """Setup the main window's GUI."""
-        # Create Buttons
-        self.addButton = QPrimaryButton("Add")
-        self.deleteButton = QPushButton("Delete")
-        self.clearAllButton = QPushButton("clear all")
-
-        self.setToolBar([
-            QPushButton('hello'),
-            QPushButton('world')
-        ])
-
         # Lay out the GUI
-        sidebarLayout = QVBoxLayout()
-        sidebarLayout.addWidget(self.addButton)
-        sidebarLayout.addWidget(self.deleteButton)
-        sidebarLayout.addWidget(self.clearAllButton)
+        self.sidebarLayout = SidebarLayout()
+        self.mainLayout = MainLayout()
+        self.setupMainLayout(self.sidebarLayout, self.mainLayout)
 
 
-        mainLayout = QVBoxLayout()
-        label = QLabel()
-        label.setText("Hello world")
-        mainLayout.addWidget(label)
-
-        self.setupSidebarLayout(sidebarLayout, mainLayout)
-
-
+    
