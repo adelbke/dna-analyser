@@ -39,7 +39,7 @@ class DNA():
             
             index += 3
         prot=''
-        print(l)
+        # print(l)
         for ele in l:  
             prot += ele+' ' 
         cls.protein_chain = prot
@@ -48,16 +48,14 @@ class DNA():
     def get_dna_complement(cls):
         adn = cls.dna_chain
         dna_comp=''
-        for i in range(len(adn)):
-            if adn[i] == 'A':
-                dna_comp += 'T'
-            elif adn[i] == 'T':
-                dna_comp += 'A'
-            elif adn[i] == 'C':
-                dna_comp += 'G'
-            elif adn[i] == 'G':
-                dna_comp += 'C'
-        dna_comp=dna_comp[::-1]
+        conversion_dict = {
+            'A':'T',
+            'T':'A',
+            'C':'G',
+            'G':'C'
+        }
+        for x in adn:
+            dna_comp += conversion_dict[x]
 
         cls.dna_complement = dna_comp
     

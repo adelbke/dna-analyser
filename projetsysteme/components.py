@@ -50,6 +50,8 @@ class SidebarLayout(QVBoxLayout):
         
         self.btn_creer_adn.clicked.connect(self.action_creer_adn)
         self.btn_adn_vers_arn.clicked.connect(self.action_adn_vers_arn)
+        self.btn_arn_vers_proteine.clicked.connect(self.action_arn_vers_proteine)
+        self.btn_comp_inv_adn.clicked.connect(self.action_comp_inv_adn)
 
     
     def action_creer_adn(self):
@@ -58,7 +60,7 @@ class SidebarLayout(QVBoxLayout):
             if n>0:
                 N=n
                 DNA.generate_dna(N)
-                MainLayout._instance.output_ADN.setText(DNA.dna_chain)
+                MainLayout._instance.output_dna_chain.setText(DNA.dna_chain)
             else:
                 msg = QMessageBox()
                 msg.setWindowTitle("create dna")
@@ -68,8 +70,15 @@ class SidebarLayout(QVBoxLayout):
     
     def action_adn_vers_arn(self):
         DNA.translate_to_rna()
-        MainLayout._instance.output_ARN.setText(DNA.rna_chain)
+        MainLayout._instance.output_rna_chain.setText(DNA.rna_chain)
 
+    def action_arn_vers_proteine(self):
+        DNA.rna_to_prot()
+        MainLayout._instance.output_protein_chain.setText(DNA.protein_chain)
+    
+    def action_comp_inv_adn(self):
+        DNA.get_dna_complement()
+        MainLayout._instance.output_dna_complement.setText(DNA.dna_complement)
 
     
     def setupButtons(self):
@@ -114,9 +123,9 @@ class MainLayout(QFormLayout):
             textEdit = QTextEdit()
             textEdit.setReadOnly(True)
 
-            setattr(self,'label_'+element[0], label)
-            setattr(self,'output_'+element[0],textEdit)
-            self.addRow(getattr(self,'label_'+element[0]),getattr(self,'output_'+element[0]))
+            setattr(self,'label_'+element[1], label)
+            setattr(self,'output_'+element[1],textEdit)
+            self.addRow(getattr(self,'label_'+element[1]),getattr(self,'output_'+element[1]))
 
 
 
