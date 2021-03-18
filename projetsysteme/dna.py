@@ -5,47 +5,7 @@ class DNA():
     # this metaclass is here to implement getters
     #  and setters for these static variables
 
-    class __metaclass__():
-        @property
-        def dna_chain(cls):
-            return cls._dna_chain
-        
-        @dna_chain.setter
-        def dna_chain(cls, value):
-            cls._dna_chain = value
-        
-        @property
-        def rna_chain(cls):
-            return cls._rna_chain
-        
-        @rna_chain.setter
-        def rna_chain(cls, value):
-            cls._rna_chain = value
-        
-        @property
-        def protein_chain(cls):
-            return cls._protein_chain
-        
-        @protein_chain.setter
-        def protein_chain(cls, value):
-            cls._protein_chain = value
-        
-        @property
-        def dna_complement(cls):
-            return cls._dna_complement
-        
-        @dna_complement.setter
-        def dna_complement(cls, value):
-            cls._dna_complement = value
-        
-        @property
-        def gc_rate(cls):
-            return cls._gc_rate
-        
-        @gc_rate.setter
-        def gc_rate(cls, value):
-            cls._gc_rate = value
-
+    
     _dna_chain= ""
     _rna_chain = ""
     _protein_chain = ""

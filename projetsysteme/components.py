@@ -1,3 +1,5 @@
+import os
+from PyQt5 import QtCore
 from PyQt5.QtWidgets import QFormLayout, QInputDialog, QLabel, QMainWindow, QHBoxLayout, QMessageBox, QTextEdit, QVBoxLayout, QWidget, QToolBar, QPushButton
 # from PyQt5.QtCore import Qt
 
@@ -8,6 +10,12 @@ class AbstractWindow(QMainWindow):
         """Initializer."""
         
         super().__init__()
+
+        styleFile = os.path.dirname(__file__) + "/style.css"
+        with open(styleFile,"r") as fh:
+            self.setStyleSheet(fh.read())
+
+
         
         # self.setMinimumWidth(1500)
     
@@ -41,6 +49,8 @@ class SidebarLayout(QVBoxLayout):
         
         
         self.btn_creer_adn.clicked.connect(self.action_creer_adn)
+        self.btn_adn_vers_arn.clicked.connect(self.action_adn_vers_arn)
+
     
     def action_creer_adn(self):
         n,result = QInputDialog.getInt(QWidget(), "Input Dialog", "Entrer la longueur:",0,0)
@@ -48,13 +58,19 @@ class SidebarLayout(QVBoxLayout):
             if n>0:
                 N=n
                 DNA.generate_dna(N)
-                print(MainLayout._instance.output_ADN.setText(DNA.dna_chain))
+                MainLayout._instance.output_ADN.setText(DNA.dna_chain)
             else:
                 msg = QMessageBox()
                 msg.setWindowTitle("create dna")
                 msg.setText("Vous devez donner un nombre positif")
                 msg.setIcon(QMessageBox.Critical)
                 x=msg.exec_()
+    
+    def action_adn_vers_arn(self):
+        DNA.translate_to_rna()
+        MainLayout._instance.output_ARN.setText(DNA.rna_chain)
+
+
     
     def setupButtons(self):
         # setup buttons list
