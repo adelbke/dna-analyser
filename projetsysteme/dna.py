@@ -65,6 +65,9 @@ class DNA():
         gc= int((adn.count("C")+adn.count("G")) / len(adn) * 100)
         cls.gc_rate=gc
     
+    # @classmethod
+    # def taux_codons()
+    
         
 # DNA.generate_dna(15)
 # DNA.translate_to_rna()
