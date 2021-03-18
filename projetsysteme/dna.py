@@ -108,6 +108,6 @@ class DNA():
         cls.gc_rate=gc
     
         
-DNA.generate_dna(15)
-DNA.translate_to_rna()
-print(DNA.rna_chain)
+# DNA.generate_dna(15)
+# DNA.translate_to_rna()
+# print(DNA.rna_chain)

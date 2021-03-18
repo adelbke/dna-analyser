@@ -6,7 +6,9 @@ from .dna import DNA
 class AbstractWindow(QMainWindow):
     def __init__(self, parent=None):
         """Initializer."""
+        
         super().__init__()
+        
         # self.setMinimumWidth(1500)
     
     def setupMainLayout(self,sidebarLayout, mainLayout):
@@ -46,7 +48,7 @@ class SidebarLayout(QVBoxLayout):
             if n>0:
                 N=n
                 DNA.generate_dna(N)
-                print(self.parentWidget().window().mainLayout.output_ADN.setText(DNA.dna_chain))
+                print(MainLayout._instance.output_ADN.setText(DNA.dna_chain))
             else:
                 msg = QMessageBox()
                 msg.setWindowTitle("create dna")
@@ -78,8 +80,12 @@ class SidebarLayout(QVBoxLayout):
     
 
 class MainLayout(QFormLayout):
+    _instance = None
     def __init__(self, *args, **kwargs):
+        if MainLayout._instance != None:
+            return None
         super().__init__(*args,**kwargs)
+        MainLayout._instance = self
         
         elements = [
             ('ADN','dna_chain'),
