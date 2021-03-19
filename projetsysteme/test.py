@@ -12,12 +12,8 @@ from main import dna_complement
 from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QMessageBox,QInputDialog, QLineEdit ,QPushButton
 from random import randint
-N=0
-DNA=''
-RNA=''
-PROT=''
-DNA_COMP=''
-GC=0
+
+
 RNA_to_acido_dic = {'UUU': 'Phe',
                     'UCU': 'Ser',
                     'UAU': 'Tyr',
@@ -82,8 +78,60 @@ RNA_to_acido_dic = {'UUU': 'Phe',
                     'GCG': 'Ala',
                     'GAG': 'Glu',
                     'GGG': 'Gly'}
+mass_amino_acid =  {'A': 71.03711,
+                    'C': 103.00919,
+                    'D': 115.02694,
+                    'E': 129.04259,
+                    'F': 147.06841,
+                    'G': 57.02146,
+                    'H': 137.05891,
+                    'I': 113.08406,
+                    'K': 128.09496,
+                    'L': 113.04049,
+                    'M': 131.04049,
+                    'N': 114.04293,
+                    'P': 97.05276,
+                    'Q': 128.05858,
+                    'R': 156.10111,
+                    'S': 87.03203,
+                    'T': 101.04768,
+                    'V': 99.06841,
+                    'W': 186.07931,
+                    'Y': 163.06333,
+                    'Z': 0}
+amino_acid_abr =   {'Ala': 'A',
+                    'Cys': 'C',
+                    'Asp': 'D',
+                    'Glu': 'E',
+                    'Phe': 'F',
+                    'Gly': 'G',
+                    'His': 'H',
+                    'Ile': 'I',
+                    'Lys': 'K',
+                    'Leu': 'L',
+                    'Met': 'M',
+                    'Asn': 'N',
+                    'Pro': 'P',
+                    'Gln': 'Q',
+                    'Arg': 'R',
+                    'Ser': 'S',
+                    'Thr': 'T',
+                    'Val': 'V',
+                    'Trp': 'W',
+                    'Tyr': 'Y',
+                    '---': 'Z'}
 
 class Ui_MainWindow(object):
+
+    N=0
+    GC=0
+    MASSE=0
+    DNA=''
+    RNA=''
+    PROT=''
+    PROT_abr=''
+    DNA_COMP=''
+
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(750, 700)
@@ -118,6 +166,11 @@ class Ui_MainWindow(object):
         self.gc_label.setGeometry(QtCore.QRect(210, 240, 500, 41))
         self.gc_label.setObjectName("gc_label")
         self.gc_label.setFont(font)
+
+        self.masse_label = QtWidgets.QLabel(self.centralwidget)
+        self.masse_label.setGeometry(QtCore.QRect(210, 290, 500, 41))
+        self.masse_label.setObjectName("masse_label")
+        self.masse_label.setFont(font)
 
         self.textEdit = QtWidgets.QTextEdit(self.centralwidget)
         self.textEdit.setEnabled(False)
@@ -240,8 +293,6 @@ class Ui_MainWindow(object):
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
-        
-
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
         MainWindow.setWindowTitle(_translate("MainWindow", "MainWindow"))
@@ -251,27 +302,31 @@ class Ui_MainWindow(object):
         self.prot_label.setText(_translate("MainWindow", "Protein"))
         self.dna_comp_label.setText(_translate("MainWindow", "Comp inv"))
         self.gc_label.setText(_translate("MainWindow",""))
+        self.masse_label.setText(_translate("MainWindow",""))
 
         self.bt_dna.clicked.connect(self.show_dialog)
         self.bt_dna.setText(_translate("MainWindow", "Créer ADN"))
 
-        self.bt_dna_to_rna.clicked.connect(lambda: self.translate_to_rna(DNA))
+        self.bt_dna_to_rna.clicked.connect(lambda: self.translate_to_rna(self.DNA))
         self.bt_dna_to_rna.setText(_translate("MainWindow", "ADN vers ARN"))
 
-        self.bt_rna_to_prot.clicked.connect(lambda: self.rna_to_prot(RNA))
+        self.bt_rna_to_prot.clicked.connect(lambda: self.rna_to_prot(self.RNA))
         self.bt_rna_to_prot.setText(_translate("MainWindow", "ARN vers PROTEIN"))
 
-        self.bt_comp_inv_adn.clicked.connect(lambda: self.dna_complement(DNA))
+        self.bt_comp_inv_adn.clicked.connect(lambda: self.dna_complement(self.DNA))
         self.bt_comp_inv_adn.setText(_translate("MainWindow", "COMP INV ADN"))
 
-        self.bt_taux_gc_adn.clicked.connect(lambda: self.gc_taux(DNA))
+        self.bt_taux_gc_adn.clicked.connect(lambda: self.gc_taux(self.DNA))
         self.bt_taux_gc_adn.setText(_translate("MainWindow", "Taux GC ADN"))
 
         self.bt_freq_codons_adn.setText(_translate("MainWindow", "Fréq codons ADN"))
         self.bt_mutation.setText(_translate("MainWindow", "Mutation"))
         self.bt_motif_adn.setText(_translate("MainWindow", "Chercher motif ADN"))
         self.bt_adn_cons_profil.setText(_translate("MainWindow", "ADN consensus + profil"))
+
+        self.bt_masse_prot.clicked.connect(lambda: self.masse(self.PROT))
         self.bt_masse_prot.setText(_translate("MainWindow", "Masse protéique"))
+
         self.bt_epis_arn.setText(_translate("MainWindow", "Epissage d\'ARN"))
 
         self.textEdit.setLineWrapColumnOrWidth(214748)
@@ -295,83 +350,113 @@ class Ui_MainWindow(object):
         self.actionNew.setShortcut(_translate("MainWindow", "Ctrl+N"))
 
     def create_dna(self,n):
-        ADN=''
+        self.DNA=''
         for i in range(1,n+1):
-            ADN+='ACGT'[randint(0,3)]
-        self.textEdit.setText(ADN)
+            self.DNA+='ACGT'[randint(0,3)]
+        self.textEdit.setText(self.DNA)
         self.textEdit.setEnabled(True)
-        DNA=ADN
-        print(DNA)    
+        print(self.DNA)    
     
-    def show_popup(self):
+    def show_popup(self,str):
         msg = QMessageBox()
-        msg.setWindowTitle("create dna")
-        msg.setText("Vous devez donner un nombre positif")
+        msg.setWindowTitle("Error")
+        msg.setText(str)
         msg.setIcon(QMessageBox.Critical)
         x=msg.exec_()
 
     def show_dialog(self):
-        n , result = QInputDialog.getInt(self.centralwidget, "Input Dialog", "Entrer la longueur:")
+        n , result = QInputDialog.getInt(self.centralwidget, "Input Dialog", "Entrer la longueur:",min=1)
         if result:
             if n>0:
-                N=n
+                self.N=n
                 self.create_dna(n)
-                print(DNA)
-                print(N)
+                print(self.DNA)
+                print(self.N)
             else:
-                self.show_popup()
+                self.show_popup("Vous devez donner un nombre positif")
 
     def translate_to_rna(self, dna_chain):
-        rna = self.textEdit.toPlainText()
-        # rna=dna_chain
-        rna = rna.replace("T", "U")
-        RNA=rna
-        self.textEdit_2.setText(rna)
-        self.textEdit_2.setEnabled(True)
-        print(RNA)
+        self.RNA = self.textEdit.toPlainText()
+        # self.RNA=dna_chain
+        if (len(self.RNA)==0):
+            self.show_popup("vous devez creer la chaine adn")
+        else:
+            self.RNA = self.RNA.replace("T", "U")
+            self.RNA=self.RNA
+            self.textEdit_2.setText(self.RNA)
+            self.textEdit_2.setEnabled(True)
+            print(self.RNA)
     
     def rna_to_prot(self,rna):
-        rna = self.textEdit_2.toPlainText()
-        index = 0
-        l = []
-        while index <= len(rna)-1:
-            if(len(rna[index:index+3]) == 3):
-                l.append(RNA_to_acido_dic[rna[index:index+3]])
-            
-            index += 3
-        prot=''
-        print(l)
-        for ele in l:  
-            prot += ele+' ' 
-        PROT=prot
-        self.textEdit_3.setText(prot)
-        self.textEdit_3.setEnabled(True)
-        print(PROT)
+        self.RNA = self.textEdit_2.toPlainText()
+        if (len(self.RNA)==0):
+            self.show_popup("vous devez creer la chaine arn")
+        else:
+            index = 0
+            l = []
+            while index <= len(self.RNA)-1:
+                if(len(self.RNA[index:index+3]) == 3):
+                    l.append(RNA_to_acido_dic[self.RNA[index:index+3]])
+                
+                index += 3
+            prot=''
+            print(l)
+            for ele in l:  
+                prot += ele+' ' 
+            for ele in l:  
+                self.PROT += ele
+            self.textEdit_3.setText(prot)
+            self.textEdit_3.setEnabled(True)
+            print(self.PROT)
 
     def dna_complement(self, adn):
-        adn = self.textEdit.toPlainText()
-        dna_comp=''
-        for i in range(len(adn)):
-            if adn[i] == 'A':
-                dna_comp += 'T'
-            elif adn[i] == 'T':
-                dna_comp += 'A'
-            elif adn[i] == 'C':
-                dna_comp += 'G'
-            elif adn[i] == 'G':
-                dna_comp += 'C'
-        dna_comp=dna_comp[::-1]
-        DNA_COMP=dna_comp
-        self.textEdit_4.setText(dna_comp)
-        self.textEdit_4.setEnabled(True)
-        print(DNA_COMP)
+        self.DNA = self.textEdit.toPlainText()
+        if (len(self.DNA)==0):
+            self.show_popup("vous devez creer la chaine ADN")
+        else:
+            for i in range(len(self.DNA)):
+                if self.DNA[i] == 'A':
+                    self.DNA_COMP += 'T'
+                elif self.DNA[i] == 'T':
+                    self.DNA_COMP += 'A'
+                elif self.DNA[i] == 'C':
+                    self.DNA_COMP += 'G'
+                elif self.DNA[i] == 'G':
+                    self.DNA_COMP += 'C'
+            self.DNA_COMP=self.DNA_COMP[::-1]
+            self.textEdit_4.setText(self.DNA_COMP)
+            self.textEdit_4.setEnabled(True)
+            print(self.DNA_COMP)
         
     def gc_taux(self,adn):
-        adn = self.textEdit.toPlainText()
-        gc= int((adn.count("C")+adn.count("G")) / len(adn) * 100)
-        self.gc_label.setText("le taux de GC est: "+str(gc)+"%")
-        GC=gc
-        print(GC)
+        self.DNA = self.textEdit.toPlainText()
+        if (len(self.DNA)==0):
+            self.show_popup("vous devez creer la chaine ADN")
+        else:
+            gc= int((self.DNA.count("C")+self.DNA.count("G")) / len(self.DNA) * 100)
+            self.gc_label.setText("le taux de GC est: "+str(gc)+"%")
+            self.GC=gc
+            print(self.GC)
+
+    def masse(self,prot):
+        if (len(self.PROT)>0):
+            index = 0
+            l = []
+            while index <= len(self.PROT)-1:
+                if(len(self.PROT[index:index+3]) == 3):
+                    l.append(amino_acid_abr[self.PROT[index:index+3]])
+                
+                index += 3
+            print(l)
+            for ele in l:  
+                    self.PROT_abr += ele
+            print(self.PROT_abr)
+            for x in self.PROT_abr:
+                self.MASSE+=mass_amino_acid[x]
+            self.masse_label.setText("La masse proteique est : "+str(self.MASSE))
+            print(self.MASSE)
+        else:
+            self.show_popup("vous devez creer le Proteine")
 
 if __name__ == "__main__":
     import sys

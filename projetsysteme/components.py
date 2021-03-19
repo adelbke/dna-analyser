@@ -55,6 +55,7 @@ class SidebarLayout(QVBoxLayout):
         self.btn_comp_inv_adn.clicked.connect(self.action_comp_inv_adn)
         self.btn_taux_gc_adn.clicked.connect(self.action_taux_gc_adn)
         self.btn_freq_codons_adn.clicked.connect(self.action_freq_codons_adn)
+        self.btn_masse_proteique.clicked.connect(self.action_masse_proteique)
 
     
     def action_creer_adn(self):
@@ -103,6 +104,11 @@ class SidebarLayout(QVBoxLayout):
         DNA.taux_codons()
         MainLayout._instance.output_codon_frequency.setText(str(DNA.codon_frequency))
     
+    def action_masse_proteique(self):
+        DNA.masse()
+        MainLayout._instance.output_protein_mass.setText(str(DNA.protein_mass))
+        pass
+
     def setupButtons(self):
         # setup buttons list
         self.buttons = [
@@ -140,7 +146,8 @@ class MainLayout(QFormLayout):
             ('Proteine','protein_chain',chain_width),
             ('Comp Inv','dna_complement',chain_width),
             ('Taux GC','taux_gc',4),
-            ('Fréquence Codons','codon_frequency',4)
+            ('Fréquence Codons','codon_frequency',40),
+            ('Masse Protéique','protein_mass',10)
         ]
         for element in elements:
             label = QLabel(element[0])

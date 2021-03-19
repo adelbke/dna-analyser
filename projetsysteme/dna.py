@@ -11,6 +11,7 @@ class DNA():
     dna_complement = ""
     gc_rate = 0
     codon_frequency=0
+    protein_mass = 0
 
 
     
@@ -21,7 +22,6 @@ class DNA():
         for i in range(0,length):
             ADN+='ACGT'[randint(0,3)]
         cls.dna_chain = ADN
-        return cls.dna_chain
     
     @classmethod
     def translate_to_rna(cls):
@@ -76,6 +76,28 @@ class DNA():
             if index+3 < len(rna) and RNA_to_acido_dic[rna[index:index+3]] != "---":
                 freq= freq+1
         cls.codon_frequency = freq
+    
+    @classmethod
+    def masse(cls):
+        from .acid_mass import amino_acid_abr, mass_amino_acid
+        if (len(cls.protein_chain)>0):
+            index = 0
+            l = []
+            while index <= len(cls.protein_chain)-1:
+                if(len(cls.protein_chain[index:index+3]) == 3):
+                    l.append(amino_acid_abr[cls.protein_chain[index:index+3]])
+                
+                index += 3
+            prot_abr = ""
+            for ele in l:  
+                prot_abr += ele
+            mass = 0
+            for x in prot_abr:
+                mass+=mass_amino_acid[x]
+            cls.protein_mass = mass
+            # print(cls.MASSE)
+        # else:
+        #     cls.show_popup("vous devez creer le Proteine")
 
     
         
