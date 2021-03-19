@@ -80,12 +80,14 @@ class DNA():
     @classmethod
     def masse(cls):
         from .acid_mass import amino_acid_abr, mass_amino_acid
-        if (len(cls.protein_chain)>0):
+        prot = cls.protein_chain.replace(' ','')
+        if (len(prot)>0):
             index = 0
             l = []
-            while index <= len(cls.protein_chain)-1:
-                if(len(cls.protein_chain[index:index+3]) == 3):
-                    l.append(amino_acid_abr[cls.protein_chain[index:index+3]])
+            while index <= len(prot)-1:
+                if(len(prot[index:index+3]) == 3):
+
+                    l.append(amino_acid_abr[prot[index:index+3]])
                 
                 index += 3
             prot_abr = ""

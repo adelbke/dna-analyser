@@ -59,7 +59,7 @@ class SidebarLayout(QVBoxLayout):
 
     
     def action_creer_adn(self):
-        n,result = QInputDialog.getInt(QWidget(), "Input Dialog", "Entrer la longueur:",0,0)
+        n,result = QInputDialog.getInt(QWidget(), "Input Dialog", "Entrer la longueur:",min=1)
         if result:
             if n>0:
                 N=n
@@ -157,7 +157,10 @@ class MainLayout(QFormLayout):
             textEdit.setVerticalScrollBarPolicy(QtCore.Qt.ScrollBarAlwaysOff)
             textEdit.setLineWrapMode(QTextEdit.NoWrap)
             singleWidth = textEdit.fontMetrics().boundingRect('A').width()
+            singleHeight = textEdit.fontMetrics().boundingRect('A').height()
+
             textEdit.setFixedWidth(singleWidth*element[2])
+            textEdit.setFixedHeight(singleHeight*3)
 
 
             setattr(self,'label_'+element[1], label)
